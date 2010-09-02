@@ -1,0 +1,26 @@
+To avoid running same batch at the same time. 
+This is useful for Rails script/runner, for example.
+
+== Usage
+
+BatchLock.run(batch_name, &block)
+Lock some batch.
+
+BatchLock.running?(batch_name, &block)
+Check some batch running?
+
+
+== Example
+
+begin
+  BatchLock.run(:go_to_park) do
+    # All users go to park!
+    User.find(all).each(&:go_to_park)
+  end
+rescue BatchLockException
+  logger.error "already running..."
+end
+
+
+If another batch named :go_to_park is running, you can't run batch.
+
